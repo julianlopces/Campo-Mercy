@@ -1,0 +1,44 @@
+# Ignorar historial de comandos y entorno
+.Rhistory
+.RData
+.Rapp.history
+# Carpeta oculta de configuración personal de RStudio
+.Rproj.user/
+# Carpeta de secretos y tokens
+.secrets/
+looker/
+*.json
+# Archivos de entorno
+.env
+*.env
+# Archivos CSV, Excel, y otros datos brutos o generados
+*.csv
+*.sav
+*.dta
+*.do
+# Resultados o salidas temporales
+*.html
+*.pdf
+*.docx
+*.log
+*.out
+*.m4a
+# Cache de paquetes
+.Rcheck/
+__pycache__/
+*.pyc
+# Archivos de sistema (Windows/macOS)
+.DS_Store
+Thumbs.db
+# Node / web (por si usas Quarto, R Shiny, etc.)
+node_modules/
+dist/
+build/
+# NO ignorar el archivo .Rproj
+!*.Rproj
+
+/bases_case_management_clean
+/bases_case_management_raw
+/Instrumento
+raw_data/~$Instrumento_mercy_ODK.xlsx
+/sheets_for_looker
