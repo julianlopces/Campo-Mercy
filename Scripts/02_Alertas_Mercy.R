@@ -17,7 +17,7 @@ alertas <- alertas %>%
 ### Missings y saltos
 
 
-ODK_filtrado <- odkmissing::import_odk_propagate_required("raw_data/instrumento_mercy_ODK.xlsx", required_value = "yes")
+ODK_filtrado <- odkmissing::import_odk_propagate_required("raw_data/Instrumento_mercy_ODK.xlsx", required_value = "yes")
 
 
 ODK_procesado <- odkmissing::build_spec_for_flags(datos = alertas, ODK_filtrado = ODK_filtrado)
