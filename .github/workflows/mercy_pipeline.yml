@@ -1,0 +1,70 @@
+name: Mercy Corps - Pipeline
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */2 * * *"  # cada 2 horas (UTC)
+
+concurrency:
+  group: mercy-alertas
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  run-mercy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+
+    env:
+      GITHUB_ACTIONS: "true"
+      SERVIDOR: ${{ secrets.SERVIDOR }}
+      PASSWORD: ${{ secrets.PASSWORD }}
+      EMAIL: ${{ secrets.EMAIL }}
+      FORMID: ${{ secrets.FORMID }}
+      GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+      IDALERTAS: ${{ secrets.IDALERTAS }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - name: Install R dependencies (pak)
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            github::julianlopces/odkmissing
+            any::pacman
+            any::dplyr
+            any::tidyr
+            any::httr
+            any::jsonlite
+            any::googledrive
+            any::googlesheets4
+            any::lubridate
+            any::dotenv
+            any::readxl
+            any::stringr
+          needs: |
+            odkmissing
+            pacman
+            dplyr
+            tidyr
+            httr
+            jsonlite
+            googledrive
+            googlesheets4
+            lubridate
+            dotenv
+            readxl
+            stringr
+
+      - name: Run master script
+        run: Rscript Scripts/Mercy_Corps_Master_script.R
