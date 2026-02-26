@@ -2,7 +2,7 @@ name: Mercy Corps - Pipeline
 
 on:
   schedule:
-    - cron: "0 */2 * * *"   # Cada 2 horas (UTC)
+    - cron: "0 */2 * * *" # cada 2 horas (UTC)
   workflow_dispatch: {}
 
 permissions:
@@ -44,14 +44,39 @@ jobs:
             libgeos-dev \
             libproj-dev
 
-      - name: Install R dependencies
+      # Instalación + cache sin solver de dependencias (evita que falle por odkmissing)
+      - name: Install base R dependencies (no solver)
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache: true
+          dependencies: "NA"
           extra-packages: |
             pacman
             pak
             remotes
+            dplyr
+            tidyr
+            httr
+            jsonlite
+            googledrive
+            googlesheets4
+            writexl
+            haven
+            stringr
+            labelled
+            lubridate
+            gtsummary
+            dotenv
+            readxl
+            tibble
+            sf
+            purrr
+            tidyverse
+
+      - name: Install odkmissing from GitHub
+        run: |
+          Rscript -e 'if (!requireNamespace("pak", quietly=TRUE)) install.packages("pak")'
+          Rscript -e 'pak::pkg_install("julianlopces/odkmissing")'
 
       - name: Run Mercy Corps pipeline
         run: |
