@@ -6,11 +6,17 @@ rm(list = ls())
 
 if (!require("pacman")) install.packages("pacman")
 library(pacman)
+
 p_load(
+  # Core pipeline
   dplyr, tidyr, httr, jsonlite,
-  googledrive, googlesheets4, writexl,
-  haven, stringr, labelled, lubridate,
-  gtsummary, dotenv, readxl, tibble, sf, purrr
+  readxl, lubridate,
+  # Google auth/export
+  googledrive, googlesheets4,
+  # Env handling
+  dotenv,
+  # Utils (ligeros)
+  stringr
 )
 
 if (!requireNamespace("odkmissing", quietly = TRUE)) {
@@ -27,16 +33,15 @@ is_blank <- function(x) is.na(x) || !nzchar(x)
 
 if (Sys.getenv("GITHUB_ACTIONS") == "true") {
   message("Cargando credenciales desde secretos en GitHub Actions...")
-  server  <- Sys.getenv("SERVIDOR")
-  password <- Sys.getenv("PASSWORD")
-  email    <- Sys.getenv("EMAIL")
-  formid   <- Sys.getenv("FORMID")
-  creds    <- Sys.getenv("GOOGLE_SHEETS_CREDENTIALS")
+  server    <- Sys.getenv("SERVIDOR")
+  password  <- Sys.getenv("PASSWORD")
+  email     <- Sys.getenv("EMAIL")
+  formid    <- Sys.getenv("FORMID")
+  creds     <- Sys.getenv("GOOGLE_SHEETS_CREDENTIALS")
   id_alertas <- Sys.getenv("IDALERTAS")
   
-  
   # Validación temprana
-  if (any(vapply(c(server, password, email, formid, creds,id_alertas), is_blank, logical(1)))) {
+  if (any(vapply(c(server, password, email, formid, creds, id_alertas), is_blank, logical(1)))) {
     stop("Faltan credenciales requeridas en variables de entorno de Actions.")
   }
   
@@ -48,12 +53,12 @@ if (Sys.getenv("GITHUB_ACTIONS") == "true") {
   googledrive::drive_auth(path = temp_creds_file, cache = ".secrets")
   googlesheets4::gs4_auth(path = temp_creds_file)
   
-  
 } else {
   # Local
   if (file.exists(".env")) {
     message("Archivo .env encontrado en: ", project_path)
     dotenv::load_dot_env(".env")
+    
     server   <- Sys.getenv("SERVIDOR")
     password <- Sys.getenv("PASSWORD")
     email    <- Sys.getenv("EMAIL")
@@ -61,7 +66,7 @@ if (Sys.getenv("GITHUB_ACTIONS") == "true") {
     temp_creds_file <- Sys.getenv("GOOGLE_SHEETS_CREDENTIALS") # ruta a JSON local
     id_alertas <- Sys.getenv("IDALERTAS")
     
-    if (any(vapply(c(server, password, email, formid, temp_creds_file,id_alertas), is_blank, logical(1)))) {
+    if (any(vapply(c(server, password, email, formid, temp_creds_file, id_alertas), is_blank, logical(1)))) {
       stop("Faltan credenciales requeridas en .env (o la ruta del JSON).")
     }
     
