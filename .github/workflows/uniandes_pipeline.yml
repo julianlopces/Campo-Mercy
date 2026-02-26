@@ -15,7 +15,7 @@ concurrency:
 jobs:
   run-alertas:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
 
     env:
       GITHUB_ACTIONS: "true"
@@ -25,6 +25,8 @@ jobs:
       FORMID: ${{ secrets.FORMID }}
       IDALERTAS: ${{ secrets.IDALERTAS }}
       GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+      # Si odkmissing fuera privado, descomenta y crea el secret GITHUB_PAT
+      # GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
     steps:
       - name: Checkout repo
@@ -44,39 +46,28 @@ jobs:
             libgeos-dev \
             libproj-dev
 
-      # Instalación + cache sin solver de dependencias (evita que falle por odkmissing)
-      - name: Install base R dependencies (no solver)
-        uses: r-lib/actions/setup-r-dependencies@v2
+      - name: Cache R packages
+        uses: actions/cache@v4
         with:
-          cache: true
-          dependencies: "NA"
-          extra-packages: |
-            pacman
-            pak
-            remotes
-            dplyr
-            tidyr
-            httr
-            jsonlite
-            googledrive
-            googlesheets4
-            writexl
-            haven
-            stringr
-            labelled
-            lubridate
-            gtsummary
-            dotenv
-            readxl
-            tibble
-            sf
-            purrr
-            tidyverse
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ runner.os }}-r-${{ hashFiles('**/*.R') }}
+          restore-keys: |
+            ${{ runner.os }}-r-
 
-      - name: Install odkmissing from GitHub
+      - name: Install pak
         run: |
-          Rscript -e 'if (!requireNamespace("pak", quietly=TRUE)) install.packages("pak")'
-          Rscript -e 'pak::pkg_install("julianlopces/odkmissing")'
+          Rscript -e 'if (!requireNamespace("pak", quietly = TRUE)) install.packages("pak", repos = "https://cloud.r-project.org")'
+
+      - name: Install R packages (incl. GitHub odkmissing)
+        run: |
+          Rscript -e 'pak::pkg_install(c(
+            "dplyr", "tidyr", "httr", "jsonlite",
+            "googledrive", "googlesheets4", "writexl",
+            "haven", "stringr", "labelled", "lubridate",
+            "gtsummary", "dotenv", "readxl", "tibble",
+            "sf", "purrr", "pacman", "tidyverse",
+            "julianlopces/odkmissing"
+          ))'
 
       - name: Run Mercy Corps pipeline
         run: |
