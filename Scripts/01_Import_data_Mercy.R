@@ -103,11 +103,9 @@ for (var in multi_vars) {
 data <- data %>%
   mutate(across(starts_with("fcs"),as.numeric),
          across(starts_with("rcsi"),as.numeric),
-         across(starts_with("hhs"),as.numeric))
-
-
-
-
+         across(starts_with("hhs"),as.numeric))%>%
+  mutate(SubmissionDate = mdy_hms(SubmissionDate),
+         SubmissionDate_COL = SubmissionDate - hours(5))
 
 
 

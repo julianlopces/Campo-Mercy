@@ -69,9 +69,8 @@ vars_finanzas <- c(
 
 audios_supervisores <- alertas %>%
   filter(push_estado == "Éxito")%>%
-  mutate(SubmissionDate = mdy_hms(SubmissionDate, tz = "UTC"),
-        SubmissionDate = with_tz(SubmissionDate, tzone = "America/Bogota"),
-        SubmissionDate = as.character(SubmissionDate))%>%
+  arrange(SubmissionDate_COL)%>%
+  mutate(SubmissionDate = as.character(SubmissionDate_COL))%>%
   select(Fecha = SubmissionDate,Encuestador = username, Encuestado = pull_name, Celular = pull_celular,
          audit, audit_2, audit_3, all_of(vars_finanzas))
 
