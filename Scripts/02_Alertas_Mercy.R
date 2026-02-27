@@ -71,7 +71,7 @@ alertas <- alertas %>%
     total_gastos = rowSums(across(all_of(var_gastos)), na.rm = TRUE),
     ingreso_mes  = .data[[var_ingreso]],
     flag_gastos  = if_else(
-      total_gastos > ingreso_mes * 1.30,
+      total_gastos > ingreso_mes * 1.40,
       1,
       0,
       missing = 0
