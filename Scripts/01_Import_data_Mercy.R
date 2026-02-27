@@ -97,3 +97,20 @@ for (var in multi_vars) {
   }
 }
 
+# Transformar variables numéricas ----------------------------------------------
+
+
+data <- data %>%
+  mutate(across(starts_with("fcs"),as.numeric),
+         across(starts_with("rcsi"),as.numeric),
+         across(starts_with("hhs"),as.numeric))
+
+
+
+
+
+
+
+
+
+
