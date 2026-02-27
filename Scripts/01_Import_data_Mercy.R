@@ -101,12 +101,14 @@ for (var in multi_vars) {
 
 
 data <- data %>%
-  mutate(across(starts_with("fcs"),as.numeric),
-         across(starts_with("rcsi"),as.numeric),
-         across(starts_with("hhs"),as.numeric))%>%
-  mutate(SubmissionDate = mdy_hms(SubmissionDate),
-         SubmissionDate_COL = SubmissionDate - hours(5))
-
+  mutate(
+    across(starts_with("fcs"), as.numeric),
+    across(starts_with("rcsi"), as.numeric),
+    across(starts_with("hhs"), as.numeric),
+    SubmissionDate = mdy_hms(SubmissionDate, tz = "UTC"),
+    SubmissionDate_COL = SubmissionDate - hours(5)
+  ) %>%
+  filter(SubmissionDate_COL >= ymd("2026-02-27"))
 
 
 
