@@ -85,7 +85,7 @@ exceso_de_gastos <- alertas %>%
   filter(Proporcion_gastos_ingresos > 1.6 | Proporcion_gastos_ingresos < 0.5)%>%
   mutate(ingreso_mes = format(ingreso_mes, scientific = FALSE),
          ingresos_mes_number = format(ingresos_mes_number,scientific = FALSE))%>%
-  arrange(SubmissionDate_COL)%>%arrange(desc(Proporcion_gastos_ingresos))
+  arrange(SubmissionDate_COL)
 
 
 sheet2 <- tryCatch({
