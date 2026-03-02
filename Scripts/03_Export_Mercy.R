@@ -77,7 +77,7 @@ audios_supervisores <- alertas %>%
 
 exceso_de_gastos <- alertas %>%
   filter(part_valido == 1 & ingreso_mes > 0)%>%
-  select(ID,SubmissionDate_COL,username,pull_name,pull_celular_base, ingreso_mes, ingresos_mes_number, gastos_totales_30,
+  select(ID,SubmissionDate_COL,Encuestador = username, Encuestado = pull_name, Celular = pull_celular_base, ingreso_mes, ingresos_mes_number, gastos_totales_30,
          validacion_gastos)%>%
   mutate(Proporcion_gastos_ingresos = round(as.numeric(gastos_totales_30)/as.numeric(ingresos_mes_number),2),
          Diferencia_gastos_ingresos = as.numeric(ingresos_mes_number) - as.numeric(gastos_totales_30))%>%
