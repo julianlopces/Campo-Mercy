@@ -75,6 +75,19 @@ audios_supervisores <- alertas %>%
          audit, audit_2, audit_3, all_of(vars_finanzas))
 
 
+exceso_de_gastos <- alertas %>%
+  filter(part_valido == 1 & ingreso_mes > 0)%>%
+  select(ID,SubmissionDate_COL,username,pull_name,pull_celular_base, ingreso_mes, ingresos_mes_number, gastos_totales_30,
+         validacion_gastos)%>%
+  mutate(Proporcion_gastos_ingresos = round(as.numeric(gastos_totales_30)/as.numeric(ingresos_mes_number),2),
+         Diferencia_gastos_ingresos = as.numeric(ingresos_mes_number) - as.numeric(gastos_totales_30))%>%
+  arrange(desc(Proporcion_gastos_ingresos))%>%
+  filter(Proporcion_gastos_ingresos > 1.6 | Proporcion_gastos_ingresos < 0.5)%>%
+  mutate(ingreso_mes = format(ingreso_mes, scientific = FALSE),
+         ingresos_mes_number = format(ingresos_mes_number,scientific = FALSE))%>%
+  arrange(SubmissionDate_COL)%>%arrange(desc(Proporcion_gastos_ingresos))
+
+
 sheet2 <- tryCatch({
   gs4_get("16-oq125y0fLtAyJ19ImRNnSQ9H-nSNcI77yILvQRgjY")
 }, error = function(e) {
@@ -82,6 +95,7 @@ sheet2 <- tryCatch({
 })
 
 export_sheet(audios_supervisores,sheet2, "base_audios_supervisores",  label = "audios", pause = 5)
+export_sheet(exceso_de_gastos,sheet2, "Gastos_extremos",  label = "gastos", pause = 5)
 
 
 message("✅ Todos los datos fueron exportados exitosamente.")
