@@ -129,6 +129,8 @@ var_gastos_1 <- names(data %>%
 
 data <- data %>%
   mutate(across(all_of(var_gastos_1),
+                ~ if_else(.x %in% c("88","99"), "0", .x))) %>%
+  mutate(across(all_of(var_gastos_1),
                 ~ as.numeric(.x),
                 .names = "{.col}_number"))
 
