@@ -111,6 +111,14 @@ data <- data %>%
   filter(SubmissionDate_COL >= ymd("2026-02-27"))
 
 
+# Correcciones valores numéricos
 
-
-
+data <- data %>%
+  mutate(ingresos_mes = case_when(
+    ID == "a1e57ee9-b441-4a81-84c2-06ca683c9f68" & ingresos_mes == "20000000" ~ "2000000",
+    ID == "3877173c-a2be-42d7-8431-27f0ee9d4606" & ingresos_mes == "8500000" ~ "850000",
+    TRUE ~ ingresos_mes),
+    ingresos_mes_number = case_when(
+      ID == "a1e57ee9-b441-4a81-84c2-06ca683c9f68" & ingresos_mes_number == "20000000" ~ "2000000",
+      ID == "3877173c-a2be-42d7-8431-27f0ee9d4606" & ingresos_mes_number == "8500000" ~ "850000",
+      TRUE ~ ingresos_mes_number))
