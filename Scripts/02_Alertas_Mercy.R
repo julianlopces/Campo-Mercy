@@ -68,7 +68,7 @@ var_ingreso <- names(data %>%
 alertas <- alertas %>%
   mutate(
     across(all_of(c(var_gastos,var_ingreso)), as.numeric),
-    total_gastos = rowSums(across(all_of(var_gastos)), na.rm = TRUE),
+    gastos_totales_30 = rowSums(across(all_of(var_gastos)), na.rm = TRUE),
     ingreso_mes  = .data[[var_ingreso]],
     flag_gastos  = if_else(
       total_gastos > ingreso_mes * 1.50,
