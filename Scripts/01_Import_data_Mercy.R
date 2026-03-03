@@ -118,7 +118,23 @@ data <- data %>%
     ID == "a1e57ee9-b441-4a81-84c2-06ca683c9f68" & ingresos_mes == "20000000" ~ "2000000",
     ID == "3877173c-a2be-42d7-8431-27f0ee9d4606" & ingresos_mes == "8500000" ~ "850000",
     TRUE ~ ingresos_mes),
-    ingresos_mes_number = case_when(
-      ID == "a1e57ee9-b441-4a81-84c2-06ca683c9f68" & ingresos_mes_number == "20000000" ~ "2000000",
-      ID == "3877173c-a2be-42d7-8431-27f0ee9d4606" & ingresos_mes_number == "8500000" ~ "850000",
-      TRUE ~ ingresos_mes_number))
+    gasto_inversion = case_when(
+      ID == "1f4253a8-a6ef-478b-b5d3-f594d4354e16" & gasto_inversion == "5670000" ~ "567000",
+      TRUE ~ gasto_inversion))
+
+var_gastos_1 <- names(data %>%
+                      select(!contains("number") & contains("gasto") &  !contains("validacion") & !contains("umbral") 
+                             & !contains("totales")))
+
+
+data <- data %>%
+  mutate(across(all_of(var_gastos_1),
+                ~ as.numeric(.x),
+                .names = "{.col}_number"))
+
+
+
+
+
+
+
