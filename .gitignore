@@ -44,3 +44,4 @@ raw_data/~$Instrumento_mercy_ODK.xlsx
 /sheets_for_looker
 Scripts/00_Procesamiento_cases.R
 /Export_survey_cto
+change_suffix.py
