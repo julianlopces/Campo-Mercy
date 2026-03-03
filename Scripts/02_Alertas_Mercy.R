@@ -61,9 +61,9 @@ alertas <- odkmissing::create_skip_vars(
 var_gastos <- names(data %>%
   select(contains("number") & contains("gasto")))
 
+var_gastos <- var_gastos[!var_gastos %in% "gastos_totales_30_number"]
 var_ingreso <- names(data %>%
                       select(contains("number") & contains("ingresos")))
-
 
 alertas <- alertas %>%
   mutate(
