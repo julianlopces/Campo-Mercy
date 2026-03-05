@@ -125,6 +125,7 @@ data <- data %>%
 var_gastos_1 <- names(data %>%
                       select(!contains("number") & contains("gasto") &  !contains("validacion") & !contains("umbral") 
                              & !contains("totales")))
+var_gastos_1 <- c(var_gastos_1,"ingresos_mes")
 
 
 data <- data %>%
