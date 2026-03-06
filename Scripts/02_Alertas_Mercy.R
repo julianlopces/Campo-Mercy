@@ -81,8 +81,8 @@ alertas <- alertas %>%
 # Alerta de miembros del hogar vacíos
 
 alertas <- alertas %>%
-  mutate(member_name_1 = na_if(trimws(member_name_1),"")%>%
-   flag_miembros_hogar = if_else(h_size > 0 & is.na(member_name_1),1,0))
+  mutate(member_name_1 = na_if(trimws(member_name_1),""),
+         flag_miembros_hogar = if_else(h_size > 0 & is.na(member_name_1),1,0))
 
 # Consolidar alertas -----------------------------------------------------------
 
