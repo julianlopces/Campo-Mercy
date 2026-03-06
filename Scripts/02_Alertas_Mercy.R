@@ -71,13 +71,18 @@ alertas <- alertas %>%
     gastos_totales_30 = rowSums(across(all_of(var_gastos)), na.rm = TRUE),
     ingreso_mes  = .data[[var_ingreso]],
     flag_gastos  = if_else(
-      gastos_totales_30 > ingreso_mes * 1.50,
+      gastos_totales_30 > ingreso_mes * 1.60,
       1,
       0,
       missing = 0
     )
   )
 
+# Alerta de miembros del hogar vacíos
+
+alertas <- alertas %>%
+  mutate(member_name_1 = na_if(trimws(member_name_1),"")%>%
+   flag_miembros_hogar = if_else(h_size > 0 & is.na(member_name_1),1,0))
 
 # Consolidar alertas -----------------------------------------------------------
 
@@ -85,9 +90,9 @@ alertas <- alertas %>%
 alertas <- alertas %>%
   mutate(total_encuestas = n(),
          Exitos = if_else(flag_duracion== 0 & flag_missing == 0 & flag_skips == 0 &  
-                            flag_gastos == 0 & part_valido == 1,1,0),
+                            flag_gastos == 0 & part_valido == 1 & flag_miembro_hogar == 0,1,0),
          Alertas = if_else(flag_duracion == 1 | flag_missing == 1 | flag_skips == 1 |   
-                             flag_gastos == 1,1,0),
+                             flag_gastos == 1 | flag_miembro_hogar == 1,1,0),
          Rechazo = if_else(no_acepta == 5 | consentimiento == 0,1,0,missing = NA),
          no_contesta = if_else(no_acepta == 1,1,0,missing = NA),
          num_equiv = if_else(no_acepta == 2,1,0,missing = NA),
