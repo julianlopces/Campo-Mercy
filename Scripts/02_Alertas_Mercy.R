@@ -90,9 +90,9 @@ alertas <- alertas %>%
 alertas <- alertas %>%
   mutate(total_encuestas = n(),
          Exitos = if_else(flag_duracion== 0 & flag_missing == 0 & flag_skips == 0 &  
-                            flag_gastos == 0 & part_valido == 1 & flag_miembro_hogar == 0,1,0),
+                            flag_gastos == 0 & part_valido == 1 & flag_miembros_hogar == 0,1,0),
          Alertas = if_else(flag_duracion == 1 | flag_missing == 1 | flag_skips == 1 |   
-                             flag_gastos == 1 | flag_miembro_hogar == 1,1,0),
+                             flag_gastos == 1 | flag_miembros_hogar == 1,1,0),
          Rechazo = if_else(no_acepta == 5 | consentimiento == 0,1,0,missing = NA),
          no_contesta = if_else(no_acepta == 1,1,0,missing = NA),
          num_equiv = if_else(no_acepta == 2,1,0,missing = NA),
