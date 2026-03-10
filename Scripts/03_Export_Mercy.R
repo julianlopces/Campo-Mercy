@@ -72,7 +72,7 @@ audios_supervisores <- alertas %>%
   arrange(SubmissionDate_COL)%>%
   mutate(SubmissionDate = as.character(SubmissionDate_COL))%>%
   select(Fecha = SubmissionDate,Encuestador = username, Encuestado = pull_name, Celular = pull_celular_base,
-         audit, audit_2, audit_3, all_of(vars_finanzas))
+         audit, audit_2, audit_3, all_of(vars_finanzas), obs)
 
 
 exceso_de_gastos <- alertas %>%
