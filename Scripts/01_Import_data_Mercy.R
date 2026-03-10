@@ -137,8 +137,71 @@ data <- data %>%
                 .names = "{.col}_number"))
 
 
+# Corregir DNI y PPT
+
+correcciones_documentos <- read_sheet("16-oq125y0fLtAyJ19ImRNnSQ9H-nSNcI77yILvQRgjY",
+                                      sheet = "cedulas_extranjeria")%>%
+  filter(!is.na(correccion))
 
 
+data <- data %>%
+  left_join(correcciones_documentos%>%select(ID,correccion), by = "ID")%>%
+  mutate(tipo_documento = case_when(
+    correccion == "CC"  ~ "1",
+    correccion == "DNI" ~ "7",
+    correccion == "PPT" ~ "3",
+    TRUE ~ tipo_documento
+  ) )%>%
+  select(-correccion)
 
 
+# Corregir miembros del hogar
 
+correcciones_miembros <- read_sheet("16-oq125y0fLtAyJ19ImRNnSQ9H-nSNcI77yILvQRgjY",
+                                      sheet = "correcciones_miembros_hogar")
+
+
+correcciones_miembros <- correcciones_miembros %>%
+  mutate(across(starts_with("verificacion_presencia_"),
+                ~ case_when(
+                  . == "Sigue viviendo con la persona" ~ 1,
+                  . == "Ya no vive con la persona" ~ 0,
+                  TRUE ~ NA_real_
+                ))) %>%
+  
+  # 2. Recodificar miembro_salida
+  mutate(across(starts_with("miembro_salida_") & !starts_with("miembro_salida_66"),
+                ~ case_when(
+                  . == "Emigró a otro país" ~ 1,
+                  . == "Regresó a Venezuela" ~ 2,
+                  . == "Se independizó" ~ 3,
+                  . == "Otro" ~ 66,
+                  TRUE ~ NA_real_
+                )))
+# Sobreescribir valores faltantes
+
+for(i in 1:4){
+  
+  # nombres dinámicos de variables
+  id_var  <- paste0("member_id_", i)
+  name_var <- paste0("member_name_", i)
+  pres_var <- paste0("verificacion_presencia_", i)
+  salida_var <- paste0("miembro_salida_", i)
+  salida66_var <- paste0("miembro_salida_66_", i)
+  
+  # crear vector de match
+  match_index <- match(data[[id_var]], correcciones_miembros[[id_var]])
+  
+  # sobrescribir solo cuando haya match
+  data[[name_var]][!is.na(match_index)] <- 
+    correcciones_miembros[[name_var]][match_index[!is.na(match_index)]]
+  
+  data[[pres_var]][!is.na(match_index)] <- 
+    correcciones_miembros[[pres_var]][match_index[!is.na(match_index)]]
+  
+  data[[salida_var]][!is.na(match_index)] <- 
+    correcciones_miembros[[salida_var]][match_index[!is.na(match_index)]]
+  
+  data[[salida66_var]][!is.na(match_index)] <- 
+    correcciones_miembros[[salida66_var]][match_index[!is.na(match_index)]]
+}
