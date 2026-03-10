@@ -205,3 +205,56 @@ for(i in 1:4){
   data[[salida66_var]][!is.na(match_index)] <- 
     correcciones_miembros[[salida66_var]][match_index[!is.na(match_index)]]
 }
+
+
+# Cálculo de indicadores de seguridad alimentaria -----------------------------
+
+## Índice de consumo de alimentos (FCS) ----------------------------------------
+
+data <- data %>%
+  mutate(
+    puntaje_fcs =
+      fcs_cereales*2 + fcs_carnes*4 + fcs_legumbres*3 + fcs_lacteos*4 +
+      fcs_vegetales*1 + fcs_frutas*1 + fcs_grasas*0.5 + fcs_azucar*0.5,
+    puntaje_fcs_cat = case_when(
+      puntaje_fcs <= 28 ~ "Pobre",
+      puntaje_fcs > 28 & puntaje_fcs <= 42 ~ "Límite",
+      puntaje_fcs > 42 ~ "Aceptable",
+      TRUE ~ NA_character_ )
+  )
+
+
+## Índice de estrategias de afrontamiento (rCSI) -------------------------------
+
+data <- data %>%
+  mutate(
+    puntaje_rcsi = rcsi_baratos*1 + rcsi_pedir*2 + rcsi_porciones*1 + rcsi_adultos*3 +
+      rcsi_comidas*1,
+    puntaje_rcsi_cat = case_when(
+      puntaje_rcsi <= 4 ~ "Bajo o Nulo",
+      puntaje_rcsi > 4 & puntaje_rcsi <= 20 ~ "Medio",
+      puntaje_rcsi > 20 ~ "Alto",
+      TRUE ~ NA_character_ )
+      
+  )
+
+## Escala de hambre de los hogares (HHS) ---------------------------------------
+
+data <- data %>%
+  mutate(
+    across(
+      starts_with("hhs_frec_"),
+      ~ case_when(.x %in% c(1,2)  ~ 1, 
+                  .x == 3  ~ 2,
+                  TRUE  ~ NA_real_),
+      .names = "{.col}_puntaje"
+    ),
+    puntaje_hhs = hhs_frec_1_puntaje + hhs_frec_2_puntaje + hhs_frec_3_puntaje,
+    puntaje_hhs_cat = case_when(
+      puntaje_hhs <= 1 ~ "Poca o ninguna hambre",
+      puntaje_hhs >= 2 & puntaje_hhs <= 3 ~ "Hambre moderada",
+      puntaje_hhs >= 4 & puntaje_hhs <= 6 ~ "Hambre severa",
+      TRUE ~ NA_character_ ))
+
+
+
