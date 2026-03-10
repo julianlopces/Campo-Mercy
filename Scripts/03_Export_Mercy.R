@@ -98,4 +98,24 @@ export_sheet(audios_supervisores,sheet2, "base_audios_supervisores",  label = "a
 export_sheet(exceso_de_gastos,sheet2, "Gastos_extremos",  label = "gastos", pause = 5)
 
 
+
+exceso_de_gastos_detalle <- alertas %>%
+  filter(part_valido == 1 & ingresos_mes_number > 0)%>%
+  mutate(Proporcion_gastos_ingresos = round(as.numeric(gastos_totales_30)/as.numeric(ingresos_mes_number),2),
+         Diferencia_gastos_ingresos = as.numeric(ingresos_mes_number) - as.numeric(gastos_totales_30))%>%
+  arrange(desc(Proporcion_gastos_ingresos))%>%
+  filter(Proporcion_gastos_ingresos > 1.5 | Proporcion_gastos_ingresos < 0.5)%>%
+  mutate(ingreso_mes = format(ingreso_mes, scientific = FALSE),
+         ingresos_mes_number = format(ingresos_mes_number,scientific = FALSE))%>%
+  arrange(SubmissionDate_COL)
+
+sheet3 <- tryCatch({
+  gs4_get("1rDW94crYUKjH26sfkJ0UU70PhTnbD7J3u5awOB2nWss")
+}, error = function(e) {
+  stop("Error al conectar con el Google Sheet de alertas: ", e)
+})
+
+export_sheet(exceso_de_gastos_detalle,sheet3, "base_gastos_anomalos",  label = "gastos_anomalos", pause = 5)
+
+
 message("✅ Todos los datos fueron exportados exitosamente.")
