@@ -246,7 +246,7 @@ data <- data %>%
       starts_with("hhs_frec_"),
       ~ case_when(.x %in% c(1,2)  ~ 1, 
                   .x == 3  ~ 2,
-                  consentimiento == 1 & (informante_id == 1 | informante_id_2 == 1) ~ 0,
+                  is.na(.x) & consentimiento == 1 & (informante_id == 1 | informante_id_2 == 1) ~ 0,
                   TRUE  ~ NA_real_),
       .names = "{.col}_puntaje"
     ),
