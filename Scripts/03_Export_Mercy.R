@@ -115,6 +115,14 @@ sheet3 <- tryCatch({
   stop("Error al conectar con el Google Sheet de alertas: ", e)
 })
 
+## Espacio para ajustes --------------------------------------------------------
+
+
+
+
+
+## Fin de espacio para ajustes -------------------------------------------------
+
 export_sheet(exceso_de_gastos_detalle,sheet3, "base_gastos_anomalos",  label = "gastos_anomalos", pause = 5)
 
 
