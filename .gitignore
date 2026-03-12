@@ -36,7 +36,6 @@ dist/
 build/
 # NO ignorar el archivo .Rproj
 !*.Rproj
-
 /bases_case_management_clean
 /bases_case_management_raw
 /Instrumento
@@ -46,3 +45,4 @@ Scripts/00_Procesamiento_cases.R
 /Export_survey_cto
 change_suffix.py
 /Audio audit
+.secrets
