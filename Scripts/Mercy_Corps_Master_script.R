@@ -1,8 +1,8 @@
 #### Script Mercy Corps --------------------------------------------------------------
-# Proyecto: Mercy Corps - VenEsperanza
+# Proyecto: Mercy Corps - VenEsperanza 
 # Este script crea las alertas de auditoría y exporta los resultados a Google Sheets
 
-rm(list = ls())
+rm(list = ls()) 
 
 if (!require("pacman")) install.packages("pacman")
 library(pacman)
@@ -97,4 +97,4 @@ load_script("01_Import_data_Mercy.R")
 load_script("02_Alertas_Mercy.R")
 load_script("03_Export_Mercy.R")
 
-message("Pipeline completado exitosamente.")
+message("Pipeline completado exitosamente.") 

@@ -5,7 +5,7 @@ alertas <- data %>%
   slice_tail(n=1)%>%
   ungroup()
 
-# Crear duración y alerta
+# Crear duración y alerta 
 
 alertas <- alertas %>% 
   mutate(duration_minutes = round(as.numeric(time_encuesta_sec)/60,2))%>%
@@ -61,7 +61,7 @@ alertas <- odkmissing::create_skip_vars(
 var_gastos <- names(data %>%
   select(contains("number") & contains("gasto")))
 
-var_gastos <- var_gastos[!var_gastos %in% "gastos_totales_30_number"]
+var_gastos <- var_gastos[!var_gastos %in% "gastos_totales_30_number"] 
 var_ingreso <- names(data %>%
                       select(contains("number") & contains("ingresos")))
 
@@ -74,7 +74,7 @@ alertas <- alertas %>%
       gastos_totales_30 > ingreso_mes * 1.60,
       1,
       0,
-      missing = 0
+      missing = 0 
     )
   )
 

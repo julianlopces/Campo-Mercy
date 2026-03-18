@@ -9,7 +9,7 @@ if (exists("email") && exists("password") && exists("server") && exists("formid"
 
 
 data_ejemplo <-read_excel("raw_data/data_ejemplo_mercy.xlsx")
-vars_needed <- c(colnames(data_ejemplo),"pull_celular_base")
+vars_needed <- c(colnames(data_ejemplo),"pull_celular_base") 
 
 ## Conect to SurveyCTO ----------------------------------------------------------------
 
