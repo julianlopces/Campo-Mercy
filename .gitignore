@@ -46,3 +46,4 @@ Scripts/00_Procesamiento_cases.R
 change_suffix.py
 /Audio audit
 .secrets
+Scripts/000_Procesamiento_audios.R
