@@ -18,7 +18,7 @@ export_sheet <- function(df, ss, sheet_name, label = sheet_name, pause = 0) {
     sheet_write(df, ss = ss, sheet = sheet_name)
     message(sprintf("Datos de %s exportados correctamente.", label))
   }, error = function(e) {
-    stop(sprintf("Error al exportar %s: %s", label, conditionMessage(e)))
+    stop(sprintf("Error al exportar %s: %s", label, conditionMessage(e))) 
   })
   if (pause > 0) Sys.sleep(pause)
 }

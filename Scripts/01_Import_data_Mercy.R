@@ -216,11 +216,11 @@ for(i in 1:4){
 }
 
 
-# Cálculo de indicadores de seguridad alimentaria -----------------------------
+# Cálculo de indicadores de seguridad alimentaria ----------------------------- 
 
 ## Índice de consumo de alimentos (FCS) ----------------------------------------
 
-data <- data %>%
+data <- data %>% 
   mutate(
     puntaje_fcs =
       fcs_cereales*2 + fcs_carnes*4 + fcs_legumbres*3 + fcs_lacteos*4 +
@@ -229,7 +229,7 @@ data <- data %>%
       puntaje_fcs <= 28 ~ "Pobre",
       puntaje_fcs > 28 & puntaje_fcs <= 42 ~ "Límite",
       puntaje_fcs > 42 ~ "Aceptable",
-      TRUE ~ NA_character_ )
+      TRUE ~ NA_character_ ) 
   )
 
 
@@ -256,14 +256,14 @@ data <- data %>%
       ~ case_when(.x %in% c(1,2)  ~ 1, 
                   .x == 3  ~ 2,
                   is.na(.x) & consentimiento == 1 & (informante_id == 1 | informante_id_2 == 1) ~ 0,
-                  TRUE  ~ NA_real_),
+                  TRUE  ~ NA_real_), 
       .names = "{.col}_puntaje"
-    ),
+    ), 
     puntaje_hhs = hhs_frec_1_puntaje + hhs_frec_2_puntaje + hhs_frec_3_puntaje,
     puntaje_hhs_cat = case_when(
       puntaje_hhs <= 1 ~ "Poca o ninguna hambre",
       puntaje_hhs >= 2 & puntaje_hhs <= 3 ~ "Hambre moderada",
-      puntaje_hhs >= 4 & puntaje_hhs <= 6 ~ "Hambre severa",
+      puntaje_hhs >= 4 & puntaje_hhs <= 6 ~ "Hambre severa", 
       TRUE ~ NA_character_ ))
 
 

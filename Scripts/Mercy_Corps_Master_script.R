@@ -96,5 +96,6 @@ load_script <- function(script_name) {
 load_script("01_Import_data_Mercy.R")
 load_script("02_Alertas_Mercy.R")
 load_script("03_Export_Mercy.R")
+load_script("0000_Cuotas.R")
 
 message("Pipeline completado exitosamente.") 
