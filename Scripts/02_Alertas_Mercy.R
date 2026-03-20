@@ -1,17 +1,25 @@
 #### Alertas -------------------------------------------------------------------
 
 alertas <- data %>%
-  group_by(ID)%>%
-  slice_tail(n=1)%>%
-  ungroup()
-
-# Crear duración y alerta 
-
-alertas <- alertas %>% 
-  mutate(duration_minutes = round(as.numeric(time_encuesta_sec)/60,2))%>%
-  mutate(part_valido = if_else(consentimiento == 1 & (informante_id == 1 | informante_id_2 == 1),1,0),
-    flag_duracion = if_else(part_valido == 1 & duration_minutes < 20, 1,0,missing = 0))
-
+  # 1. Calculamos las variables necesarias primero
+  mutate(
+    duration_minutes = round(as.numeric(time_encuesta_sec) / 60, 2),
+    part_valido = if_else(consentimiento == 1 & (informante_id == 1 | informante_id_2 == 1), 1, 0,
+                          missing = 0)
+  ) %>%
+  # 2. Agrupamos por ID
+  group_by(ID) %>%
+  # 3. Ordenamos: primero los inválidos (0) y luego los válidos (1).
+  # Dentro de cada grupo, la última fila será el "último válido".
+  # Si no hay válidos, la última fila será simplemente el último registro cronológico.
+  arrange(part_valido, .by_group = TRUE) %>%
+  # 4. Tomamos el último registro de esa jerarquía
+  slice_tail(n = 1) %>%
+  ungroup() %>%
+  # 5. Creamos la bandera de duración
+  mutate(
+    flag_duracion = if_else(part_valido == 1 & duration_minutes < 20, 1, 0, missing = 0)
+  )
 # Alertas de saltos
 
 ### Missings y saltos
