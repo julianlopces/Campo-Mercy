@@ -63,7 +63,7 @@ cuotas_por_asignar_tratamiento <- cases_sobremuestra_tratamiento %>%
 table(cuotas_por_asignar_control$prioridad)
 table(cuotas_por_asignar_tratamiento$prioridad)
 
-
+cuotas_por_asignar_total_detalle <- bind_rows(cuotas_por_asignar_control,cuotas_por_asignar_tratamiento)
 cuotas_por_asignar_total <- bind_rows(cuotas_por_asignar_control,cuotas_por_asignar_tratamiento)
 
 cuotas_por_asignar_total <- cuotas_por_asignar_total %>%   
