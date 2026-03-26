@@ -125,12 +125,14 @@ casos_abiertos_encuestador <- casos_abiertos_encuestador %>%
     encuestador = Var1,
     tratamiento = Var2,
     Casos_abiertos = Freq
-  )%>%
+  ) %>%
+  # Esto asegura que todas las combinaciones de encuestador y (C, T) existan
+  tidyr::complete(encuestador, tratamiento = c("C", "T"), fill = list(Casos_abiertos = 0)) %>%
   pivot_wider(names_from = tratamiento,
-              values_from = Casos_abiertos)%>%
+              values_from = Casos_abiertos) %>%
   mutate(
     casos_abiertos_totales = C + T
-  )%>%
+  ) %>%
   arrange(desc(casos_abiertos_totales))
 
 googlesheets4::write_sheet(casos_abiertos_encuestador,ss = "1r954FJkk5OS_hLGCU8Xkw39NBHPHCAe__BeWe8MOMJQ",
