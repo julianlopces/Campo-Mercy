@@ -17,7 +17,8 @@ casos_abiertos_detalle <- cases %>%
   filter(
     numero_contactos <= 3 & !estado %in% c("Éxito","Número equivocado",
                                            "No desea participar") &
-      cuota %in% cuotas_abiertas$cuota & !str_detect(users,"Cerrado")
+      cuota %in% cuotas_abiertas$cuota & !str_detect(users,"Cerrado") &
+      !str_detect(users,"Cierre") & !str_detect(users,"Cuota")
   )
    
 
