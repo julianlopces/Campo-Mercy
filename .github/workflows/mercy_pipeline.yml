@@ -2,8 +2,8 @@ name: Mercy Corps - Pipeline
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 */2 * * *"  # cada 2 horas (UTC)
+  #schedule:
+   # - cron: "0 */2 * * *"  # cada 2 horas (UTC)
 
 concurrency:
   group: mercy-alertas
