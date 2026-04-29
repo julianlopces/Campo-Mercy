@@ -22,26 +22,40 @@ max_attempts <- 10
 attempt <- 1
 
 repeat {
-  # Llamada a la API
-  dataset_json <- POST(
+  
+  # 1. Llamada a la API con GET
+  response <- GET(
     url = API,
-    config = authenticate(email, password),
-    add_headers("Content-Type: application/json"),
-    encode = 'json'
+    authenticate(email, password, type = "basic"),
+    add_headers("Content-Type" = "application/json")
   )
   
-  # Convertir JSON a data frame
-  data <- jsonlite::fromJSON(rawToChar(dataset_json$content), flatten = TRUE)
+  # 2. Verificar que la respuesta HTTP sea exitosa
+  if (status_code(response) == 200) {
+    
+    # 3. Intentar parsear el contenido
+    data <- tryCatch(
+      {
+        jsonlite::fromJSON(
+          content(response, "text", encoding = "UTF-8"),
+          flatten = TRUE
+        )
+      },
+      error = function(e) NULL
+    )
+    
+    # 4. Verificar que el resultado sea un data frame válido
+    if (is.data.frame(data)) {
+      break
+    }
+  }
   
-  # Si df es un data frame válido, salir del ciclo
-  if (is.data.frame(data)) break
-  
-  # Si se alcanzó el número máximo de intentos, lanzar error y salir
+  # 5. Si se alcanzó el máximo de intentos, detener ejecución
   if (attempt >= max_attempts) {
     stop("Se alcanzó el número máximo de intentos sin obtener un data frame válido.")
   }
   
-  # Esperar antes de reintentar
+  # 6. Esperar antes de reintentar
   Sys.sleep(300)
   attempt <- attempt + 1
 }
@@ -49,17 +63,17 @@ repeat {
 # Transformar base de datos ----------------------------------------------------
 
 
-for (v in vars_needed) {
-  if (!(v %in% names(data))) {
-    data[[v]] <- rep(NA, nrow(data))
-  }
-}
+#for (v in vars_needed) {
+#  if (!(v %in% names(data))) {
+#    data[[v]] <- rep(NA, nrow(data))
+#  }
+#}
 
 # Organizar variables
 
 # Reordenar y dejar las demás al final
-otras_vars <- setdiff(names(data), vars_needed)
-data <- data[ , c(vars_needed, otras_vars)]
+#otras_vars <- setdiff(names(data), vars_needed)
+#data <- data[ , c(vars_needed, otras_vars)]
 
 # Filtrar pilotos --------------------------------------------------------------
 

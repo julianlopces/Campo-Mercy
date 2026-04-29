@@ -48,3 +48,8 @@ change_suffix.py
 .secrets
 Scripts/000_Procesamiento_audios.R
 Scripts/Revision_nuevas_asignaciones.R
+/transcripciones
+/arreglos
+/clean_data
+/raw_data
+/server_backup
